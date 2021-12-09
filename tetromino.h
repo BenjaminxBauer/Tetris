@@ -1,19 +1,18 @@
 #ifndef TETROMINO_H
 #define TETROMINO_H
-//The code for this file will define a tetromino tetromino 
+//The code for this file will define a tetromino tetromino
 // implements common functions to all tetrominos that will be drawn/animated
 
 #include <Angel.h>
 #include <iostream>
 #include <stdlib.h>
 
-class Tetromino 
+class Tetromino
 {
-  public:
-
+public:
   // Default constructor
   Tetromino();
-  
+
   // Move the Tetromino to (x, y) in screen coordinates
   void move(GLfloat nx, GLfloat ny);
 
@@ -69,8 +68,8 @@ protected:
   GLfloat size; // size of Tetromino (see individual Tetrominos for specific meaning)
 
   // location of Tetromino (x, y)
-  GLfloat x;      
-  GLfloat y; 
+  GLfloat x;
+  GLfloat y;
 
   // Color of Tetromino
   GLfloat r;
@@ -92,9 +91,9 @@ protected:
   GLint offsetLoc;
   // Size of Tetromino
   GLint sizeLoc;
-  // Color of Tetromino 
+  // Color of Tetromino
   GLint colorLoc;
-  
+
   // For smooth animation consistent across machines
   GLint last_time;
   GLint current_time;
