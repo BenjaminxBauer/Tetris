@@ -15,13 +15,13 @@
 // Bool to determine whether to clear the screen
 bool clear = true;
 
-// Determine if the user is ready for another shape
-//bool draw = false;
-
 // Holds a randomNumber
 int randomNum;
 
-// Bool to determine whether to update the animation
+// X goal, holds the value of where the x position of the free fall should be
+int positionX = 450;
+
+// Bool to determine whether to update the animation, used in idle
 bool updating = true;
 
 // Pointer to the Iobject (must be initialized after
@@ -37,7 +37,7 @@ Z *Z_Tetromino;
 // Data storage for our geometry for the lines
 vec2 *points;
 
-// How big a Ito draw.
+// How big a tetromino to draw.
 GLfloat size = 30.0;
 
 // Window Size
@@ -47,23 +47,62 @@ GLint windowSizeLoc;
 int win_h = 0;
 int win_w = 0;
 
-// Initial parameters of the ellipses
-GLfloat angular_offset = 3.14;
-GLfloat angular_velocity = 1.0 / 230.0;
-GLfloat minor_axis = 100.0;
-GLfloat major_axis = 150.0;
+// extern "C" void idle()
+// {
+//   if (updating)
+//   {
+//     if (randomNum == 0)
+//     {
+//       I_Tetromino->update();
+//       I_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 1)
+//     {
+//       O_Tetromino->update();
+//       O_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 2)
+//     {
+//       T_Tetromino->update();
+//       T_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 3)
+//     {
+//       J_Tetromino->update();
+//       J_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 4)
+//     {
+//       L_Tetromino->update();
+//       L_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 5)
+//     {
+//       S_Tetromino->update();
+//       S_Tetromino->change_goal(positionX, 0);
+//     }
+//     else if (randomNum == 6)
+//     {
+//       Z_Tetromino->update();
+//       Z_Tetromino->change_goal(positionX, 0);
+//     }
 
+//     glutPostRedisplay();
+//   }
+// }
+
+// Function initalizes a random seed using the computer's clock, makes it so that the program generates a new random number each time its used
 extern "C" void initRandomTime()
 {
   srand(time(NULL));
 }
 
+// Generates a random number and draws the according tetromino based off that number (0-6 one for each tetromino)
 extern "C" void drawRandomTetromino()
 {
-  //draw = false;
   // Generate a random number
-  //randomNum = rand() % 10;
-  randomNum = 0;
+  randomNum = rand() % 10;
+  //randomNum = 2;
   if (randomNum > 6)
   {
     drawRandomTetromino();
@@ -115,24 +154,8 @@ extern "C" void display()
   // Draw one tetromino randomly
   drawRandomTetromino();
 
-  // I_Tetromino->draw();
-  // O_Tetromino->draw();
-  // T_Tetromino->draw();
-  // J_Tetromino->draw();
-  // L_Tetromino->draw();
-  // S_Tetromino->draw();
-  // Z_Tetromino->draw();
-
   glutSwapBuffers();
 }
-
-// extern "C" void idle()
-// {
-//   if (draw == true)
-//   {
-//     drawRandomTetromino();
-//   }
-// }
 
 // Maintains the mapping from screen to world coordinates.
 extern "C" void myReshape(int w, int h)
@@ -145,24 +168,13 @@ extern "C" void myReshape(int w, int h)
   glutPostRedisplay();
 }
 
-// Example menu code.
+// Game menu code.
 extern "C" void myMenu(int value)
 {
   switch (value)
   {
-  case 1:
-    // Clear screen
-    glClear(GL_COLOR_BUFFER_BIT);
-    break;
-  case 2:
-    // Set clear color to red
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    break;
-  case 3:
-    // Set clear color to black
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    break;
-  default:
+  case 6:
+    exit(0);
     break;
   }
   glutPostRedisplay();
@@ -199,6 +211,7 @@ extern "C" void key(unsigned char k, int xx, int yy)
     }
     else if (randomNum == 4)
     {
+      positionX = positionX - 50;
       L_Tetromino->moveLeft();
     }
     else if (randomNum == 5)
@@ -230,6 +243,7 @@ extern "C" void key(unsigned char k, int xx, int yy)
     }
     else if (randomNum == 4)
     {
+      positionX = positionX + 50;
       L_Tetromino->moveRight();
     }
     else if (randomNum == 5)
@@ -274,9 +288,9 @@ extern "C" void key(unsigned char k, int xx, int yy)
     break;
   // Rotate left
   case 'z':
-    if (randomNum == 0)
+    if (randomNum == 4)
     {
-      I_Tetromino->rotate();
+      //L_Tetromino->rotate();
     }
     break;
   // Rotate right
@@ -287,19 +301,15 @@ extern "C" void key(unsigned char k, int xx, int yy)
 }
 
 // Create menu and items.
-// %%%
-// %%% What happens if we change the menu's numbering scheme?
-// %%%
 void setupMenu()
 {
   glutCreateMenu(myMenu);
-  glutAddMenuEntry("clear screen", 1);
-  glutAddMenuEntry("red background", 2);
-  glutAddMenuEntry("black background", 3);
-  /*  glutAddMenuEntry("The Answer", 42);
-  glutAddMenuEntry("clear screen", 32);
-  glutAddMenuEntry("red background", 22);
-  glutAddMenuEntry("black background", 12);*/
+  glutAddMenuEntry("Welcome to Tetris! Use these commands:", 1);
+  glutAddMenuEntry("Press 'a' to move left", 2);
+  glutAddMenuEntry("Press 'd' to move right", 3);
+  glutAddMenuEntry("Press 's' to move down", 4);
+  glutAddMenuEntry("Press 'z' to rotate", 5);
+  glutAddMenuEntry("Press 'q' to quit", 6);
 
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -316,8 +326,6 @@ void myinit()
   // Color initializations
   glClearColor(0.0, 0.0, 0.0, 1.0);
 
-  // Can you do this?  Attach a menu to a button already
-  // used for something else?
   setupMenu();
 
   // Callbacks
@@ -333,9 +341,9 @@ void init()
   // Locations of variables in shaders.
   // Offset of square
   GLint offsetLoc;
-  // Size of square
+  // Size of tetromino
   GLint sizeLoc;
-  // Color of I
+  // Color of tetromino
   GLint colorLoc;
 
   // Create a vertex array object on the GPU
@@ -351,10 +359,6 @@ void init()
 
   // Load shaders and use the resulting shader program
   GLuint program = InitShader("vshader.glsl", "fshader.glsl");
-
-  // InitShader does the glUseProgram
-  // So the following would be redundant
-  // glUseProgram(program);
 
   // Initialize the vertex position attribute from the vertex shader
   windowSizeLoc = glGetUniformLocation(program, "windowSize");
@@ -392,69 +396,63 @@ void init()
   glUniform2f(offsetLoc, 0.0, 0.0); // Initial offset
                                     // for mouse loc.
 
-  // We need just one square and circle to draw any number of them.
   points = new vec2[I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints];
-  //points = new vec2[Z::NumPoints];
 
   // Build the I tetromino
   I_Tetromino = new I(0, points, offsetLoc, sizeLoc, colorLoc);
   I_Tetromino->change_size(size);
   I_Tetromino->move(390, 850);
-  I_Tetromino->selectColor(1.0 / 255.0, 0.0, 0.0);
+  //I_Tetromino->selectColor(1.0 / 255.0, 0.0, 0.0);
   I_Tetromino->color(0.0f, 1.0f, 1.0f);
 
   // Build the O tetromino
   O_Tetromino = new O(I::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   O_Tetromino->change_size(size);
   O_Tetromino->move(425, 825);
-  O_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //O_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   O_Tetromino->color(1.0f, 1.0f, 0.0f);
 
   // Build the T tetromino
   T_Tetromino = new T(I::NumPoints + O::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   T_Tetromino->change_size(size);
   T_Tetromino->move(405, 850);
-  T_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //T_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   T_Tetromino->color(0.99f, 0.43f, 0.78f);
 
   // Build the J tetromino
   J_Tetromino = new J(I::NumPoints + O::NumPoints + T::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   J_Tetromino->change_size(size);
   J_Tetromino->move(450, 875);
-  J_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //J_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   J_Tetromino->color(0.0f, 0.0f, 1.0f);
 
   // Build the L tetromino
   L_Tetromino = new L(I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   L_Tetromino->change_size(size);
   L_Tetromino->move(425, 875);
-  L_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //L_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   L_Tetromino->color(1.0f, 0.5f, 0.0f);
 
   S_Tetromino = new S(I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   S_Tetromino->change_size(size);
   S_Tetromino->move(400, 825);
-  S_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //S_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   S_Tetromino->color(0.0f, 1.0f, 0.0f);
 
   Z_Tetromino = new Z(I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints, points, offsetLoc, sizeLoc, colorLoc);
   Z_Tetromino->change_size(size);
   Z_Tetromino->move(415, 825);
-  Z_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
+  //Z_Tetromino->selectColor(2.0 / 255.0, 0.0, 0.0);
   Z_Tetromino->color(1.0f, 0.0f, 0.0f);
 
   // Send the data to the graphics card, after it has been generated
   // by creating the objects in the world (above).
   glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
-  //glBufferData(GL_ARRAY_BUFFER, (Z::NumPoints)*sizeof(vec2), points, GL_STATIC_DRAW);
 }
 
 //  Main Program
 int main(int argc, char **argv)
 {
-  // Several people forgot to put in the following line.  This is an
-  // error, even if it still works on your machine, a program is
-  // incorrect without the following call to initialize GLUT.
   glutInit(&argc, argv);
 
   // Initialize random time

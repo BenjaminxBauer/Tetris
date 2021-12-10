@@ -24,9 +24,6 @@ void T::init_points()
     points[7 + index] = vec2(2, -1);
 
     inited = true;
-    // Actually send the data we've created to the GPU.
-    // Can't do this here as we aren't sure we have an open OpenGL window yet.
-    //    glBufferSubData(GL_ARRAY_BUFFER, index*sizeof(vec2), NumPoints*sizeof(vec2), points);
   }
 }
 
@@ -34,11 +31,6 @@ void T::init_points()
 T::T() : Tetromino(), goal_x(0.0), goal_y(0.0)
 {
   init_points();
-  // Defaults
-  minor_axis = 200.0;
-  major_axis = 300.0;
-  angle_offset = 0.0;
-  angular_velocity = 1.0 / 500.0;
 }
 
 // Constructor if start of I vertices aren't at 0.
@@ -59,11 +51,6 @@ T::T(GLuint nindex, vec2 *npoints, GLint noffsetLoc, GLint nsizeLoc, GLint ncolo
   goal_x = goal_y = 0.0;
 
   init_points();
-  // Defaults
-  minor_axis = 200.0;
-  major_axis = 300.0;
-  angle_offset = 0.0;
-  angular_velocity = 1.0 / 500.0;
 }
 
 // Move to the left
@@ -105,34 +92,6 @@ void T::moveDown()
   }
 }
 
-// Setter to modify the parameters of the ellipse orbit
-void T::set_ellipse_parameters(GLfloat nminor_axis, GLfloat nmajor_axis,
-                               GLfloat nangle_offset,
-                               GLfloat nangular_velocity)
-{
-  minor_axis = nminor_axis;
-  major_axis = nmajor_axis;
-  angle_offset = nangle_offset;
-  if (angular_velocity != nangular_velocity)
-  {
-    GLfloat angle = current_time * angular_velocity;
-    GLfloat nangle = current_time * nangular_velocity;
-    angle_offset += angle - nangle;
-    angular_velocity = nangular_velocity;
-  }
-}
-
-// Get the parameters of the ellipse movement.
-void T::get_ellipse_parameters(GLfloat &nminor_axis, GLfloat &nmajor_axis,
-                               GLfloat &nangle_offset,
-                               GLfloat &nangular_velocity)
-{
-  nminor_axis = minor_axis;
-  nmajor_axis = major_axis;
-  nangle_offset = angle_offset;
-  nangular_velocity = angular_velocity;
-}
-
 // Code to call to draw a I.
 void T::draw(bool select_mode)
 {
@@ -152,7 +111,6 @@ void T::draw(bool select_mode)
   {
     glUniform4f(colorLoc, r, g, b, 1.0);
   }
-  //  std::cout << "Drawing I at (" << x << " " << y << ") color = (" << r << ", " << g << ", " << b << ")" << std::endl;
   glDrawArrays(GL_TRIANGLE_STRIP, index, NumPoints);
 }
 
@@ -178,15 +136,6 @@ void T::update()
     x = goal_x;
     y = goal_y;
   }
-  set_last_time();
-}
-
-// Update the position of the I from time
-void T::update_ellipse()
-{
-  current_time += compute_time();
-  x = goal_x + major_axis * sin(current_time * angular_velocity + angle_offset);
-  y = goal_y + minor_axis * cos(current_time * angular_velocity + angle_offset);
   set_last_time();
 }
 
