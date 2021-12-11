@@ -106,6 +106,62 @@ void Z::moveDown()
   }
 }
 
+// Rotate L Tetromino
+void Z::firstRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, -2);
+  points[2 + index] = vec2(1, 0);
+  points[3 + index] = vec2(1, -2);
+
+  points[4 + index] = vec2(1, -1);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(2, 1);
+  points[7 + index] = vec2(2, -1);
+  points[8 + index] = vec2(1, -1);
+  points[9 + index] = vec2(1, -1);
+}
+void Z::secondRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 1);
+  points[2 + index] = vec2(2, 0);
+  points[3 + index] = vec2(2, 1);
+
+  points[4 + index] = vec2(1, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(1, 2);
+  points[7 + index] = vec2(-1, 1);
+  points[8 + index] = vec2(-1, 2);
+}
+void Z::thirdRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, -2);
+  points[2 + index] = vec2(1, 0);
+  points[3 + index] = vec2(1, -2);
+
+  points[4 + index] = vec2(1, -1);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(2, 1);
+  points[7 + index] = vec2(2, -1);
+  points[8 + index] = vec2(1, -1);
+  points[9 + index] = vec2(1, -1);
+}
+void Z::originalPosition()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 1);
+  points[2 + index] = vec2(2, 0);
+  points[3 + index] = vec2(2, 1);
+
+  points[4 + index] = vec2(1, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(1, 2);
+  points[7 + index] = vec2(-1, 1);
+  points[8 + index] = vec2(-1, 2);
+}
+
 // Code to call to draw a I.
 void Z::draw(bool select_mode)
 {

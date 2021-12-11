@@ -5,7 +5,7 @@
 
 #include "s.h"
 
-GLint S::NumPoints = 9;
+GLint S::NumPoints = 10;
 bool S::inited = false;
 
 void S::init_points()
@@ -22,6 +22,7 @@ void S::init_points()
     points[6 + index] = vec2(1, 2);
     points[7 + index] = vec2(3, 1);
     points[8 + index] = vec2(3, 2);
+    points[9 + index] = vec2(3, 2);
 
     inited = true;
   }
@@ -90,6 +91,64 @@ void S::moveDown()
   {
     y = y - 25;
   }
+}
+
+// Rotate L Tetromino
+void S::firstRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 2);
+  points[2 + index] = vec2(1, 2);
+  points[3 + index] = vec2(1, 0);
+
+  points[4 + index] = vec2(0, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(2, 1);
+  points[7 + index] = vec2(2, -1);
+  points[8 + index] = vec2(1, -1);
+  points[9 + index] = vec2(1, 1);
+}
+void S::secondRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 1);
+  points[2 + index] = vec2(2, 0);
+  points[3 + index] = vec2(2, 1);
+
+  points[4 + index] = vec2(1, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(1, 2);
+  points[7 + index] = vec2(3, 1);
+  points[8 + index] = vec2(3, 2);
+  points[9 + index] = vec2(3, 2);
+}
+void S::thirdRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 2);
+  points[2 + index] = vec2(1, 2);
+  points[3 + index] = vec2(1, 0);
+
+  points[4 + index] = vec2(0, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(2, 1);
+  points[7 + index] = vec2(2, -1);
+  points[8 + index] = vec2(1, -1);
+  points[9 + index] = vec2(1, 1);
+}
+void S::originalPosition()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(0, 1);
+  points[2 + index] = vec2(2, 0);
+  points[3 + index] = vec2(2, 1);
+
+  points[4 + index] = vec2(1, 0);
+  points[5 + index] = vec2(1, 1);
+  points[6 + index] = vec2(1, 2);
+  points[7 + index] = vec2(3, 1);
+  points[8 + index] = vec2(3, 2);
+  points[9 + index] = vec2(3, 2);
 }
 
 // Code to call to draw a I.

@@ -25,6 +25,12 @@ public:
   // Initialize the points in the points array for I.
   void init_points();
 
+  // Rotate
+  void firstRotate();
+  void secondRotate();
+  void thirdRotate();
+  void originalPosition();
+
   // Code to call to draw a I.
   // If select is true, then use the selection color.
   void draw(bool select = false);

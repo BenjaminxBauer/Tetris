@@ -5,7 +5,7 @@
 
 #include "j.h"
 
-GLint J::NumPoints = 7;
+GLint J::NumPoints = 10;
 bool J::inited = false;
 
 void J::init_points()
@@ -20,6 +20,9 @@ void J::init_points()
     points[4 + index] = vec2(1, -2);
     points[5 + index] = vec2(-1, -3);
     points[6 + index] = vec2(-1, -2);
+    points[7 + index] = vec2(-1, -2);
+    points[8 + index] = vec2(-1, -2);
+    points[9 + index] = vec2(-1, -2);
 
     inited = true;
   }
@@ -88,6 +91,64 @@ void J::moveDown()
   {
     y = y - 25;
   }
+}
+
+// Rotate J Tetromino
+void J::firstRotate()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(3, 0);
+  points[2 + index] = vec2(3, 1);
+  points[3 + index] = vec2(0, 1);
+
+  points[4 + index] = vec2(0, 0);
+  points[5 + index] = vec2(0, 2);
+  points[6 + index] = vec2(1, 2);
+  points[7 + index] = vec2(1, 0);
+  points[8 + index] = vec2(0, 0);
+  points[9 + index] = vec2(0, 0);
+}
+void J::secondRotate()
+{
+  points[0 + index] = vec2(3, 0);
+  points[1 + index] = vec2(3, -1);
+  points[2 + index] = vec2(1, 0);
+  points[3 + index] = vec2(1, -1);
+
+  points[4 + index] = vec2(2, 0);
+  points[5 + index] = vec2(2, -3);
+  points[6 + index] = vec2(1, -1);
+  points[7 + index] = vec2(1, -3);
+  points[8 + index] = vec2(1, -3);
+  points[9 + index] = vec2(1, -3);
+}
+void J::thirdRotate()
+{
+  points[0 + index] = vec2(3, 0);
+  points[1 + index] = vec2(3, 1);
+  points[2 + index] = vec2(0, 1);
+  points[3 + index] = vec2(0, 0);
+
+  points[4 + index] = vec2(3, 0);
+  points[5 + index] = vec2(3, 1);
+  points[6 + index] = vec2(3, -1);
+  points[7 + index] = vec2(2, -1);
+  points[8 + index] = vec2(2, 0);
+  points[9 + index] = vec2(3, 0);
+}
+void J::originalPosition()
+{
+  points[0 + index] = vec2(0, 0);
+  points[1 + index] = vec2(1, 0);
+  points[2 + index] = vec2(0, -3);
+  points[3 + index] = vec2(1, -3);
+
+  points[4 + index] = vec2(1, -2);
+  points[5 + index] = vec2(-1, -3);
+  points[6 + index] = vec2(-1, -2);
+  points[7 + index] = vec2(-1, -2);
+  points[8 + index] = vec2(-1, -2);
+  points[9 + index] = vec2(-1, -2);
 }
 
 // Code to call to draw a I.

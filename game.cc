@@ -18,6 +18,9 @@ bool clear = true;
 // Holds a randomNumber
 int randomNum;
 
+// Keeps track of which position we are for rotation
+int rotateCounter = 0;
+
 // X goal, holds the value of where the x position of the free fall should be
 int positionX = 450;
 
@@ -47,49 +50,52 @@ GLint windowSizeLoc;
 int win_h = 0;
 int win_w = 0;
 
-// extern "C" void idle()
-// {
-//   if (updating)
-//   {
-//     if (randomNum == 0)
-//     {
-//       I_Tetromino->update();
-//       I_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 1)
-//     {
-//       O_Tetromino->update();
-//       O_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 2)
-//     {
-//       T_Tetromino->update();
-//       T_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 3)
-//     {
-//       J_Tetromino->update();
-//       J_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 4)
-//     {
-//       L_Tetromino->update();
-//       L_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 5)
-//     {
-//       S_Tetromino->update();
-//       S_Tetromino->change_goal(positionX, 0);
-//     }
-//     else if (randomNum == 6)
-//     {
-//       Z_Tetromino->update();
-//       Z_Tetromino->change_goal(positionX, 0);
-//     }
+GLuint TransformLoc;
+mat4 transforms[1];
 
-//     glutPostRedisplay();
-//   }
-// }
+extern "C" void idle()
+{
+  if (updating)
+  {
+    if (randomNum == 0)
+    {
+      I_Tetromino->update();
+      I_Tetromino->change_goal(positionX, 0);
+    }
+    else if (randomNum == 1)
+    {
+      O_Tetromino->update();
+      O_Tetromino->change_goal(positionX, 0);
+    }
+    else if (randomNum == 2)
+    {
+      T_Tetromino->update();
+      T_Tetromino->change_goal(positionX, 0);
+    }
+    else if (randomNum == 3)
+    {
+      J_Tetromino->update();
+      J_Tetromino->change_goal(positionX, 100);
+    }
+    else if (randomNum == 4)
+    {
+      L_Tetromino->update();
+      L_Tetromino->change_goal(positionX, 100);
+    }
+    else if (randomNum == 5)
+    {
+      S_Tetromino->update();
+      S_Tetromino->change_goal(positionX, 50);
+    }
+    else if (randomNum == 6)
+    {
+      Z_Tetromino->update();
+      Z_Tetromino->change_goal(positionX, 50);
+    }
+
+    glutPostRedisplay();
+  }
+}
 
 // Function initalizes a random seed using the computer's clock, makes it so that the program generates a new random number each time its used
 extern "C" void initRandomTime()
@@ -101,8 +107,8 @@ extern "C" void initRandomTime()
 extern "C" void drawRandomTetromino()
 {
   // Generate a random number
-  randomNum = rand() % 10;
-  //randomNum = 2;
+  //randomNum = rand() % 10;
+  randomNum = 4;
   if (randomNum > 6)
   {
     drawRandomTetromino();
@@ -193,6 +199,7 @@ extern "C" void key(unsigned char k, int xx, int yy)
     break;
   // Move left option , user could also use left arrow key
   case 'a':
+    positionX = positionX - 50;
     if (randomNum == 0)
     {
       I_Tetromino->moveLeft();
@@ -211,7 +218,6 @@ extern "C" void key(unsigned char k, int xx, int yy)
     }
     else if (randomNum == 4)
     {
-      positionX = positionX - 50;
       L_Tetromino->moveLeft();
     }
     else if (randomNum == 5)
@@ -225,6 +231,7 @@ extern "C" void key(unsigned char k, int xx, int yy)
     break;
   // Move right option , user could also use the right arrow key
   case 'd':
+    positionX = positionX + 50;
     if (randomNum == 0)
     {
       I_Tetromino->moveRight();
@@ -243,7 +250,6 @@ extern "C" void key(unsigned char k, int xx, int yy)
     }
     else if (randomNum == 4)
     {
-      positionX = positionX + 50;
       L_Tetromino->moveRight();
     }
     else if (randomNum == 5)
@@ -286,15 +292,204 @@ extern "C" void key(unsigned char k, int xx, int yy)
       Z_Tetromino->moveDown();
     }
     break;
-  // Rotate left
+  // Rotate Clockwise
   case 'z':
-    if (randomNum == 4)
+    if (randomNum == 3)
     {
-      //L_Tetromino->rotate();
+      rotateCounter = rotateCounter + 1;
+      J_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        J_Tetromino->firstRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        J_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        J_Tetromino->thirdRotate();
+      }
+      else
+      {
+        J_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      J_Tetromino->draw();
+    }
+    else if (randomNum == 4)
+    {
+      rotateCounter = rotateCounter + 1;
+      L_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        L_Tetromino->firstRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        L_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        L_Tetromino->thirdRotate();
+      }
+      else
+      {
+        L_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      L_Tetromino->draw();
+    }
+    else if (randomNum == 5)
+    {
+      rotateCounter = rotateCounter + 1;
+      S_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        S_Tetromino->firstRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        S_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        S_Tetromino->thirdRotate();
+      }
+      else
+      {
+        S_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      S_Tetromino->draw();
+    }
+    else if (randomNum == 6)
+    {
+      rotateCounter = rotateCounter + 1;
+      Z_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        Z_Tetromino->firstRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        Z_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        Z_Tetromino->thirdRotate();
+      }
+      else
+      {
+        Z_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      Z_Tetromino->draw();
     }
     break;
   // Rotate right
   case 'x':
+    // For these just calling the same rotate functions in different orders
+    if (randomNum == 3)
+    {
+      rotateCounter = rotateCounter + 1;
+      J_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        J_Tetromino->thirdRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        J_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        J_Tetromino->firstRotate();
+      }
+      else
+      {
+        J_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      J_Tetromino->draw();
+    }
+    else if (randomNum == 4)
+    {
+      rotateCounter = rotateCounter + 1;
+      L_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        L_Tetromino->thirdRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        L_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        L_Tetromino->firstRotate();
+      }
+      else
+      {
+        L_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      L_Tetromino->draw();
+    }
+    else if (randomNum == 5)
+    {
+      rotateCounter = rotateCounter + 1;
+      S_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        S_Tetromino->thirdRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        S_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        S_Tetromino->firstRotate();
+      }
+      else
+      {
+        S_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      S_Tetromino->draw();
+    }
+    else if (randomNum == 6)
+    {
+      rotateCounter = rotateCounter + 1;
+      Z_Tetromino->move(425, 875); // With more time I would set this to the last known location instead of the top
+      if (rotateCounter == 1)
+      {
+        Z_Tetromino->thirdRotate();
+      }
+      else if (rotateCounter == 2)
+      {
+        Z_Tetromino->secondRotate();
+      }
+      else if (rotateCounter == 3)
+      {
+        Z_Tetromino->firstRotate();
+      }
+      else
+      {
+        Z_Tetromino->originalPosition();
+        rotateCounter = 0;
+      }
+      glBufferData(GL_ARRAY_BUFFER, (I::NumPoints + O::NumPoints + T::NumPoints + J::NumPoints + L::NumPoints + S::NumPoints + Z::NumPoints) * sizeof(vec2), points, GL_STATIC_DRAW);
+      Z_Tetromino->draw();
+    }
     break;
   }
   glutPostRedisplay();
@@ -330,7 +525,7 @@ void myinit()
 
   // Callbacks
   glutDisplayFunc(display);
-  //glutIdleFunc(idle);
+  glutIdleFunc(idle);
   glutReshapeFunc(myReshape);
   glutKeyboardFunc(key);
 }

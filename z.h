@@ -29,6 +29,12 @@ public:
   // If select is true, then use the selection color.
   void draw(bool select = false);
 
+  // Rotate
+  void firstRotate();
+  void secondRotate();
+  void thirdRotate();
+  void originalPosition();
+
   // Move to the left
   void moveLeft();
 

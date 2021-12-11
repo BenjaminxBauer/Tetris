@@ -30,7 +30,10 @@ public:
   void draw(bool select = false);
 
   // Rotate
-  // void rotate();
+  void firstRotate();
+  void secondRotate();
+  void thirdRotate();
+  void originalPosition();
 
   // Move to the left
   void moveLeft();
