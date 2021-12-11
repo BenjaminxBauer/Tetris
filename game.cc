@@ -1,4 +1,21 @@
-// ** Add Header Comments **
+/**************************************************************************
+ *  game.cc
+ * 
+ * Author:  Benjamin Bauer
+ * Credit: The core of this program and set of files is built off of
+ *         Professor Chelberg's notes lec11a, specifically his animate
+ *         program, object.h object.cc, and square.h square.cc files
+ * 
+ * Email:   BB060017@ohio.edu
+ * 
+ * Description: This program and set of files are responsible for simulating the game
+ * Tetris. This file specifically creates the objects, Tetrominos and
+ * allows the user to move them and rotate them while a random shape
+ * is generated and free falls.
+ * 
+ * Date: 12/10/2021
+ * 
+ * ************************************************************************/
 
 #include <Angel.h>
 #include <iostream>
